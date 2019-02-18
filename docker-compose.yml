@@ -28,9 +28,11 @@ services:
   filebeat:
     image: docker.elastic.co/beats/filebeat:6.6.0
     restart: always
+    # Fixes Filebeat permissions reading from the Docker socket
+    user: root
     volumes:
       - ./filebeat.docker.yml:/usr/share/filebeat/filebeat.yml:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
-    # Command fixes permissions for mounting the config file on Windows hosts
+    # This command fixes permissions for mounting the config file on Windows hosts
     command: filebeat -e -strict.perms=false
