@@ -12,6 +12,8 @@ services:
     ports:
       - "9200:9200"
       - "9300:9300"
+    volumes:
+      - elasticsearch:/usr/share/elasticsearch/data
 
   kibana:
     image: docker.elastic.co/kibana/kibana:6.6.0
@@ -36,3 +38,39 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     # This command fixes permissions for mounting the config file on Windows hosts
     command: filebeat -e -strict.perms=false
+
+  grafana:
+    image: grafana/grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: secret
+    volumes:
+      - grafana:/var/lib/grafana
+
+  prometheus:
+    image: prom/prometheus
+    restart: always
+    ports:
+      - "9090:9090"
+      - "9091:9091"
+      - "9093:9093"
+      - "9094:9094"
+    volumes:
+      - prometheus:/prometheus
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+
+  telegraf:
+    image: telegraf
+    restart: always
+    ports:
+      - "8125:8125"
+      - "9273:9273"
+    volumes:
+      - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
+
+volumes:
+  elasticsearch:
+  grafana:
+  prometheus:
