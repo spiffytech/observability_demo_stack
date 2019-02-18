@@ -6,6 +6,7 @@ const port = 3000
 const logger = require('./lib/logger');
 const redis = require('./lib/redis');
 const statsd = require('./lib/statsd');
+require('./lib/metrics');
 
 app.get('/', async (req, res) => {
     try {
