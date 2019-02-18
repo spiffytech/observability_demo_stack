@@ -8,6 +8,7 @@ const redis = require('./lib/redis');
 app.get('/', async (req, res) => {
     try {
         await redis.setValue();
+        logger.info('Set a value in Redis');
         res.send('Hello World!');
     } catch(ex) {
         logger.error(ex.message);
@@ -18,6 +19,7 @@ app.get('/', async (req, res) => {
 app.get('/redis/contents', async (req, res) => {
     try {
         const value = await redis.getValue();
+        logger.info('Read a message out of Redis');
         res.send(value);
     } catch(ex) {
         logger.error(ex.message);

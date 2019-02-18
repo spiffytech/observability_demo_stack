@@ -1,7 +1,36 @@
-version: '3'
+version: '2'
 services:
   redis:
     image: redis:alpine
+    restart: always
     ports:
      - "6379:6379"
+
+  elasticsearch:
+    image: elasticsearch:6.6.0
     restart: always
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.6.0
+    restart: always
+    ports:
+      - "5601:5601"
+
+  postgres:
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:6.6.0
+    restart: always
+    volumes:
+      - ./filebeat.docker.yml:/usr/share/filebeat/filebeat.yml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    # Command fixes permissions for mounting the config file on Windows hosts
+    command: filebeat -e -strict.perms=false
