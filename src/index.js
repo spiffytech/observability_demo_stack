@@ -4,9 +4,13 @@ const app = express()
 const port = 3000
 
 const logger = require('./lib/logger');
+const postgres = require('./lib/db');
 const redis = require('./lib/redis');
 const statsd = require('./lib/statsd');
 require('./lib/metrics');
+
+const db = require('./lib/db');
+db.none('create table if not exists sample (metric integer)').catch(console.error);
 
 app.get('/', async (req, res) => {
     try {

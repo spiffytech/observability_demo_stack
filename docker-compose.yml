@@ -26,6 +26,10 @@ services:
     restart: always
     ports:
       - "5432:5432"
+    env_file:
+      - .env
+    volumes:
+      - postgres:/var/lib/postgresql/data
 
   filebeat:
     image: docker.elastic.co/beats/filebeat:6.6.0
@@ -74,3 +78,4 @@ volumes:
   elasticsearch:
   grafana:
   prometheus:
+  postgres:
